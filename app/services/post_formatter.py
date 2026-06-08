@@ -11,6 +11,24 @@ _MARKDOWN_LINK_RE = re.compile(r"\[([^\]\n]{1,120})\]\((https?://[^\s)]+|tg://[^
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 _SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?…])\s+(?=[А-ЯA-ZЁ0-9])")
 
+_RAW_MARKDOWN_LINK_RE = re.compile(r"\[([^\]\n]{1,120})\]\((https?://[^\s)]+|tg://[^\s)]+)\)")
+
+def _strip_raw_markers(text: str) -> str:
+    """Remove markdown markers that should never be visible in plain fallback."""
+    value = text or ""
+    value = re.sub(r"\*\*([^*\n]{1,300})\*\*", r"\1", value)
+    value = re.sub(r"__([^_\n]{1,260})__", r"\1", value)
+    value = re.sub(r"~~([^~\n]{1,260})~~", r"\1", value)
+    value = re.sub(r"\|\|([^|\n]{1,260})\|\|", r"\1", value)
+    value = _RAW_MARKDOWN_LINK_RE.sub(r"\1", value)
+    # Raw markdown blockquote markers are ugly in plain previews. Keep quote text.
+    value = re.sub(r"(?m)^\s*>\s?", "", value)
+    return value
+
+def plain_preview_text(text: str) -> str:
+    """Readable plain-text fallback for bot DMs after formatted send fails."""
+    return _strip_raw_markers(normalize_channel_post_layout(text or "", force_heading=False))
+
 CTA_PATTERNS = (
     "Подписаться на",
     "TG Media Lab",
@@ -117,6 +135,9 @@ def normalize_channel_post_layout(text: str, *, force_heading: bool = True) -> s
     # Put CTA onto a standalone paragraph even if the model glued it to the body.
     value = re.sub(r"\s+(Подписаться на\s+\[[^\]]{1,120}\]\(https?://[^\s)]+\))\s*$", r"\n\n\1", value)
     value = re.sub(r"\s+(Подписаться на\s+TG Media Lab)\s*$", r"\n\n\1", value)
+    # Also separate common Telegram-style markers if the model glued them into prose.
+    value = re.sub(r"(?<!\n)\s+(>\s*[^\n]{10,220})(?=\s|$)", r"\n\n\1", value)
+    value = re.sub(r"(?<!\n)\s+(#{1,3}\s+[^\n]{4,120})", r"\n\n\1", value)
 
     paragraphs = [p.strip() for p in re.split(r"\n\s*\n", value) if p.strip()]
     if not paragraphs:

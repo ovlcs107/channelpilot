@@ -27,7 +27,9 @@ from app.services.source_checker import SourceChecker, normalize_domain
 from app.services.source_packs import SourcePackRegistry
 from app.utils.text import split_long_message
 from app.services.telegram_formatting import (
+    FORMAT_HTML,
     channel_format_mode,
+    format_ui_html,
     format_for_telegram,
     normalize_format_mode,
     parse_mode_for_format,
@@ -496,10 +498,14 @@ async def cmd_start(message: Message) -> None:
     public_note = ""
     if deps().settings.bot_access_mode in {"public", "open"} and not user.accepted_terms_at:
         public_note = "\n\nДля публичного использования сначала нажми /accept — это защита от чужих каналов, спама и случайной публикации не туда."
-    # IMPORTANT: /start must be plain text.
-    # This command is used to recover access/admin ID and must never fail because of Telegram Markdown parsing.
+    # /start uses safe Telegram HTML, not legacy Markdown.
+    # If Telegram rejects formatting for any reason, fall back to plain text.
     start_text = f"{START_TEXT}{public_note}\n\nTelegram ID для ADMIN_IDS: {user_id}"
-    await message.answer(start_text, parse_mode=None)
+    try:
+        await message.answer(format_ui_html(start_text), parse_mode="HTML")
+    except Exception as exc:
+        logger.warning("Safe HTML /start failed, falling back to plain text: %s", exc)
+        await message.answer(strip_telegram_formatting(start_text), parse_mode=None)
 
 
 @router.message(Command("terms"))

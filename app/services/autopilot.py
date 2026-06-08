@@ -18,6 +18,12 @@ from app.services.publisher import Publisher
 from app.services.source_checker import SourceChecker, normalize_domain
 from app.utils.text import split_long_message
 from app.bot.keyboards import draft_keyboard
+from app.services.telegram_formatting import (
+    channel_format_mode,
+    format_for_telegram,
+    parse_mode_for_format,
+    strip_telegram_formatting,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -269,18 +275,30 @@ class AutopilotService:
                 logger.warning("Failed to notify owner %s: %s", channel.owner.telegram_id, exc)
 
     async def _notify_owner_draft(self, channel: Channel, draft_id: int, text: str) -> None:
-        chunks = split_long_message(text)
+        # Show the owner the same clean Telegram formatting that will be used in the channel.
+        # This prevents raw **bold** and > quote markers from appearing in draft previews.
+        format_mode = channel_format_mode(channel, self.settings.post_format_default)
+        parse_mode = parse_mode_for_format(format_mode)
+        formatted_text = format_for_telegram(text, format_mode)
+        chunks = split_long_message(formatted_text)
         for chunk in chunks[:-1]:
             try:
-                await self.bot.send_message(channel.owner.telegram_id, chunk, parse_mode=None)
+                await self.bot.send_message(channel.owner.telegram_id, chunk, parse_mode=parse_mode)
             except Exception as exc:
-                logger.warning("Failed to notify owner %s: %s", channel.owner.telegram_id, exc)
+                logger.warning("Failed to notify owner %s with formatted draft chunk, falling back: %s", channel.owner.telegram_id, exc)
+                await self.bot.send_message(channel.owner.telegram_id, strip_telegram_formatting(chunk), parse_mode=None)
         try:
             await self.bot.send_message(
                 channel.owner.telegram_id,
                 chunks[-1] if chunks else f"Автопилот подготовил черновик #{draft_id}.",
-                parse_mode=None,
+                parse_mode=parse_mode,
                 reply_markup=draft_keyboard(draft_id),
             )
         except Exception as exc:
-            logger.warning("Failed to notify owner %s with draft keyboard: %s", channel.owner.telegram_id, exc)
+            logger.warning("Failed to notify owner %s with draft keyboard, falling back: %s", channel.owner.telegram_id, exc)
+            await self.bot.send_message(
+                channel.owner.telegram_id,
+                strip_telegram_formatting(text),
+                parse_mode=None,
+                reply_markup=draft_keyboard(draft_id),
+            )

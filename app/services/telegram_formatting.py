@@ -7,7 +7,7 @@ from typing import Iterable
 from urllib.parse import urlparse
 
 from app.utils.text import strip_html
-from app.services.post_formatter import normalize_channel_post_layout
+from app.services.post_formatter import normalize_channel_post_layout, plain_preview_text
 
 FORMAT_PLAIN = "plain"
 FORMAT_HTML = "html"
@@ -68,9 +68,20 @@ def parse_mode_for_format(mode: str | None) -> str | None:
     return None
 
 
+
+
+def format_ui_html(text: str) -> str:
+    """Format bot UI/help text as safe Telegram HTML without channel-post layout normalization.
+
+    Channel posts need aggressive paragraph normalization, but /start and /help
+    already contain carefully written lists. This renderer preserves those line
+    breaks while still converting **bold**, `code` and links safely.
+    """
+    return sanitize_telegram_html(markdownish_to_html(text or ""))
+
 def strip_telegram_formatting(text: str) -> str:
-    """Return readable text without Telegram parse-mode formatting."""
-    return strip_html(text or "")
+    """Return readable text without Telegram/Markdown parse-mode formatting."""
+    return plain_preview_text(strip_html(text or ""))
 
 
 def format_for_telegram(text: str, mode: str | None = FORMAT_HTML) -> str:
@@ -86,7 +97,8 @@ def format_for_telegram(text: str, mode: str | None = FORMAT_HTML) -> str:
     if normalized == FORMAT_PLAIN:
         return strip_telegram_formatting(text)
     if normalized == FORMAT_MARKDOWN_V2:
-        return markdown_to_telegram_v2(strip_telegram_formatting(text))
+        # Preserve markdown-ish **bold**, > quotes and [links](url), then escape safely.
+        return markdown_to_telegram_v2(text)
     return sanitize_telegram_html(markdownish_to_html(text))
 
 
