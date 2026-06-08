@@ -1,0 +1,80 @@
+{
+  "ru_general": {
+    "title": "Русские новости: общая лента",
+    "description": "Крупные русскоязычные RSS-источники: Россия, мир, экономика, общество.",
+    "language": "ru",
+    "region": "RU",
+    "sources": [
+      {"title": "РИА Новости", "url": "https://ria.ru/export/rss2/index.xml", "priority": 8, "rules": ["trusted"]},
+      {"title": "ТАСС", "url": "https://tass.ru/rss/v2.xml", "priority": 8, "rules": ["trusted"]},
+      {"title": "Интерфакс", "url": "https://www.interfax.ru/rss.asp", "priority": 7, "rules": ["trusted"]},
+      {"title": "РБК", "url": "https://rssexport.rbc.ru/rbcnews/news/30/full.rss", "priority": 7, "rules": ["trusted"]},
+      {"title": "Коммерсантъ", "url": "https://www.kommersant.ru/RSS/news.xml", "priority": 6, "rules": ["trusted"]},
+      {"title": "Lenta.ru", "url": "https://lenta.ru/rss", "priority": 5, "rules": []}
+    ]
+  },
+  "ru_world": {
+    "title": "Русскоязычные международные новости",
+    "description": "Мировая повестка на русском: международные события, дипломатия, экономика, общество.",
+    "language": "ru",
+    "region": "WORLD",
+    "sources": [
+      {"title": "РИА Новости — все новости", "url": "https://ria.ru/export/rss2/index.xml", "priority": 7, "rules": ["trusted"]},
+      {"title": "ТАСС", "url": "https://tass.ru/rss/v2.xml", "priority": 7, "rules": ["trusted"]},
+      {"title": "РБК", "url": "https://rssexport.rbc.ru/rbcnews/news/30/full.rss", "priority": 6, "rules": ["trusted"]},
+      {"title": "Коммерсантъ", "url": "https://www.kommersant.ru/RSS/news.xml", "priority": 6, "rules": ["trusted"]},
+      {"title": "ООН Новости — русский", "url": "https://news.un.org/feed/subscribe/ru/news/all/rss.xml", "priority": 8, "rules": ["trusted", "priority"]}
+    ]
+  },
+  "world_general": {
+    "title": "Международные новости: EN/global",
+    "description": "Англоязычные мировые источники для глобальной повестки.",
+    "language": "en",
+    "region": "WORLD",
+    "sources": [
+      {"title": "BBC World", "url": "https://feeds.bbci.co.uk/news/world/rss.xml", "priority": 8, "rules": ["trusted"]},
+      {"title": "Associated Press Top News", "url": "https://apnews.com/hub/ap-top-news?output=rss", "priority": 8, "rules": ["trusted"]},
+      {"title": "Al Jazeera", "url": "https://www.aljazeera.com/xml/rss/all.xml", "priority": 7, "rules": ["trusted"]},
+      {"title": "The Guardian World", "url": "https://www.theguardian.com/world/rss", "priority": 7, "rules": ["trusted"]},
+      {"title": "NPR World", "url": "https://feeds.npr.org/1004/rss.xml", "priority": 6, "rules": ["trusted"]},
+      {"title": "UN News", "url": "https://news.un.org/feed/subscribe/en/news/all/rss.xml", "priority": 8, "rules": ["trusted", "priority"]}
+    ]
+  },
+  "world_business": {
+    "title": "Мировая экономика и бизнес",
+    "description": "Глобальные деловые и экономические источники.",
+    "language": "en",
+    "region": "WORLD",
+    "sources": [
+      {"title": "BBC Business", "url": "https://feeds.bbci.co.uk/news/business/rss.xml", "priority": 7, "rules": ["trusted"]},
+      {"title": "The Guardian Business", "url": "https://www.theguardian.com/uk/business/rss", "priority": 6, "rules": ["trusted"]},
+      {"title": "CNBC Top News", "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html", "priority": 6, "rules": ["trusted"]},
+      {"title": "IMF News", "url": "https://www.imf.org/en/News/RSS", "priority": 8, "rules": ["trusted", "priority"]}
+    ]
+  },
+  "tech_global": {
+    "title": "Технологии: global",
+    "description": "Технологии, AI, стартапы и IT-индустрия.",
+    "language": "en",
+    "region": "WORLD",
+    "sources": [
+      {"title": "The Verge", "url": "https://www.theverge.com/rss/index.xml", "priority": 7, "rules": ["trusted"]},
+      {"title": "TechCrunch", "url": "https://techcrunch.com/feed/", "priority": 7, "rules": ["trusted"]},
+      {"title": "Ars Technica", "url": "https://feeds.arstechnica.com/arstechnica/index", "priority": 7, "rules": ["trusted"]},
+      {"title": "MIT Technology Review", "url": "https://www.technologyreview.com/feed/", "priority": 8, "rules": ["trusted"]}
+    ]
+  },
+  "games_global": {
+    "title": "Игровые новости: global",
+    "description": "Игровая индустрия, релизы, платформы и студии.",
+    "language": "en",
+    "region": "WORLD",
+    "sources": [
+      {"title": "IGN", "url": "https://feeds.feedburner.com/ign/news", "priority": 7, "rules": ["trusted"]},
+      {"title": "GameSpot", "url": "https://www.gamespot.com/feeds/news/", "priority": 6, "rules": ["trusted"]},
+      {"title": "PC Gamer", "url": "https://www.pcgamer.com/rss/", "priority": 6, "rules": ["trusted"]},
+      {"title": "PlayStation Blog", "url": "https://blog.playstation.com/feed/", "priority": 8, "rules": ["trusted", "priority"]},
+      {"title": "Xbox Wire", "url": "https://news.xbox.com/en-us/feed/", "priority": 8, "rules": ["trusted", "priority"]}
+    ]
+  }
+}

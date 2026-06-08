@@ -1,0 +1,6 @@
+ChannelPilot AI v21.11 Formatting Hotfix
+- Stronger readable Telegram post layout
+- Auto blank lines between title/body/CTA
+- Bold first-line heading normalization
+- Paragraph splitting for long generated text
+- Clean CTA link conversion remains intact

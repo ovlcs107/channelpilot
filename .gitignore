@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environments
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+
+# Runtime files
+media/
+downloads/
+tmp/
+*.db
+*.sqlite
+*.sqlite3
+logs/
+
+# Archives / generated
+*.zip
+*.tar.gz
+*.rar
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
